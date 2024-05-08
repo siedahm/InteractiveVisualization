@@ -8,52 +8,59 @@
 </head>
 <body>
 <div id="content">
-<h1>CO2 Emissions per Capita</h1>
+	<h1>CO2 Emissions per Capita</h1>
 </div>
 <script>
 
 var width = 500, height=300;
 
 var svg = d3.select("#content").append("svg")
-.attr("viewBox", "0 0 " + width + " " + height)
-.attr("width", width)
-.attr("height",height);
-
+	    .attr("viewBox", "0 0 " + width + " " + height)
+		.attr("width", width)
+		.attr("height",height);
+		
 d3.csv("co2_pcap_cons.csv", function(error, data) {
-if (error) {
-console.log(error);
-} else {
-d3.select("body").selectAll("p")
-.data(data)
-.enter()
-.append("p")
-.text(function(d) {
-return d;
+    if (error) {
+        console.log(error);
+    } else {
+        var rects = svg.selectAll("rect")
+		.data(data)
+		.enter()
+		.append("rect");
+		
+		rects
+		.attr("x",10)
+		.attr("y",function(d) {return height -  getAverage(d);})
+		.attr("width",20)
+		.attr("height", function(d) {return height -  getAverage(d);});
+		
+			
+		
+		function getAverage(d){
+		
+			for( var i=0; i<=193; i++){
+			
+			accumulator = 0
+			record = data[i];
 
+			// loop through all years, from 1980 to 2012
+				for (var year=1922; year<=2022; year++) 
+				{
+				//parse each cell into float
+					accumulator = accumulator + parseFloat(record[year]);	
+				}
+				//get average of each record
+				return accumulator/193;
+			}
+		
+		}
+		
+	}
+	
 });
-}
-
-
-
-var rects = svg.selectAll("rect")
-.data(data)
-.enter()
-.append("rect");
-
-rects
-.attr("x",0)
-.attr("y",function(d) {return height - parseFloat(d[2022]);})
-.attr("width",20)
-.attr("height",function(d) {return parseFloat(d[2022]);});
-
-
-
-});
-
-
-
 </script>
 </body>
 </html>
+
 
 
